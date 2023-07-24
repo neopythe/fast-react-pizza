@@ -1,5 +1,22 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import Cart from "@/features/cart/Cart";
+import CreateOrder from "@/features/order/CreateOrder";
+import Menu from "@/features/menu/Menu";
+import Order from "@/features/order/Order";
+
+import Home from "@/ui/Home";
+
+const router = createBrowserRouter([
+  { path: "/", element: <Home /> },
+  { path: "/cart", element: <Cart /> },
+  { path: "/menu", element: <Menu /> },
+  { path: "/order/:orderId", element: <Order /> },
+  { path: "/order/new", element: <CreateOrder /> },
+]);
+
 function App() {
-  return <div>Hello, Vite!</div>;
+  return <RouterProvider router={router}></RouterProvider>;
 }
 
 export default App;
