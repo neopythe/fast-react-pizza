@@ -4,7 +4,7 @@ import {
   calcMinutesLeft,
   formatCurrency,
   formatDate,
-} from "../../utils/helpers";
+} from "../../utilities/helpers";
 
 const order = {
   id: "ABCDEF",
@@ -44,13 +44,13 @@ const order = {
 function Order() {
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
-    id,
-    status,
+    // id,
+    // status,
     priority,
     priorityPrice,
     orderPrice,
     estimatedDelivery,
-    cart,
+    // cart,
   } = order;
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
 
@@ -58,13 +58,11 @@ function Order() {
     <div>
       <div>
         <h2>Status</h2>
-
         <div>
           {priority && <span>Priority</span>}
           <span>{status} order</span>
         </div>
       </div>
-
       <div>
         <p>
           {deliveryIn >= 0
@@ -73,7 +71,6 @@ function Order() {
         </p>
         <p>(Estimated delivery: {formatDate(estimatedDelivery)})</p>
       </div>
-
       <div>
         <p>Price pizza: {formatCurrency(orderPrice)}</p>
         {priority && <p>Price priority: {formatCurrency(priorityPrice)}</p>}
