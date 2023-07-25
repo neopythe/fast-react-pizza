@@ -8,7 +8,6 @@ import type { Pizza } from "@/types";
 
 function Menu() {
   const menu = useLoaderData() as Pizza[];
-  console.log(menu);
 
   return (
     <ul>
