@@ -1,3 +1,22 @@
+type Order = {
+  id: string;
+  status: string;
+  customer: string;
+  phone: string;
+  address: string;
+  priority: boolean;
+  cart: {
+    pizzaId: number;
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+  }[];
+  estimatedDelivery: string;
+  orderPrice: number;
+  priorityPrice: number;
+};
+
 type Pizza = {
   id: number;
   name: string;
@@ -7,4 +26,4 @@ type Pizza = {
   imageUrl: string;
 };
 
-export type { Pizza };
+export type { Order, Pizza };
