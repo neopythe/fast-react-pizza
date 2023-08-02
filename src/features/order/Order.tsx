@@ -1,4 +1,4 @@
-import { Params, useLoaderData } from "react-router-dom";
+import { useLoaderData, LoaderFunctionArgs } from "react-router-dom";
 
 import { getOrder } from "@/services/apiRestaurant";
 
@@ -55,7 +55,7 @@ function Order() {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export async function loader({ params }: { params: Params }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const order = await getOrder(params.orderId!);
   return order;
 }

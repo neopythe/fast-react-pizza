@@ -1,6 +1,6 @@
-import type { Pizza } from "@/types";
-
 import { formatCurrency } from "@/utilities/helpers";
+
+import type { Pizza } from "@/types";
 
 type Props = {
   pizza: Pizza;
