@@ -1,14 +1,24 @@
 // import { useState } from "react";
-import { redirect, ActionFunctionArgs, Form } from "react-router-dom";
+import {
+  redirect,
+  useActionData,
+  useNavigation,
+  ActionFunctionArgs,
+  Form,
+} from "react-router-dom";
 
 import { createOrder } from "@/services/apiRestaurant";
 
+interface Errors {
+  phone?: string;
+}
+
 // https://uibakery.io/regex-library/phone-number
 
-// const isValidPhone = (string: string) =>
-//   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-//     string
-//   );
+const isValidPhone = (string: string) =>
+  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
+    string
+  );
 
 const fakeCart = [
   {
@@ -37,6 +47,11 @@ const fakeCart = [
 function CreateOrder() {
   // const [withPriority, setWithPriority] = useState(false);
 
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+
+  const formErrors = useActionData() as Errors;
+
   const cart = fakeCart;
 
   return (
@@ -53,6 +68,7 @@ function CreateOrder() {
           <div>
             <input type="tel" name="phone" required />
           </div>
+          {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
         <div>
           <label>Address</label>
@@ -72,7 +88,9 @@ function CreateOrder() {
         </div>
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <button>Order now</button>
+          <button disabled={isSubmitting}>
+            {isSubmitting ? "Placing order..." : "Order now"}
+          </button>
         </div>
       </Form>
     </div>
@@ -87,8 +105,18 @@ export async function action({ request }: ActionFunctionArgs) {
   const order = {
     ...data,
     cart: JSON.parse(String(data.cart)),
+    phone: String(data.phone), // For type checking below
     priority: data.priority === "on",
   };
+
+  const errors: Errors = {};
+
+  if (!isValidPhone(order.phone)) {
+    errors.phone =
+      "Please give us your correct phone number. We might need it to contact you.";
+  }
+
+  if (Object.keys(errors).length) return errors;
 
   const newOrder = await createOrder(order);
 
