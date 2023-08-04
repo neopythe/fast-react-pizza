@@ -6,6 +6,10 @@ type CartItem = {
   unitPrice: number;
 };
 
+type CartState = {
+  cart: CartItem[];
+};
+
 type Order = {
   id: string;
   status: string;
@@ -36,4 +40,4 @@ type StoreState = {
   user: UserState;
 };
 
-export type { CartItem, Order, Pizza, StoreState, UserState };
+export type { CartItem, CartState, Order, Pizza, StoreState, UserState };
