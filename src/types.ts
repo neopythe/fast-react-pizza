@@ -28,4 +28,8 @@ type Pizza = {
   imageUrl: string;
 };
 
-export type { CartItem, Order, Pizza };
+type UserState = {
+  username: string;
+};
+
+export type { CartItem, Order, Pizza, UserState };
