@@ -32,4 +32,8 @@ type UserState = {
   username: string;
 };
 
-export type { CartItem, Order, Pizza, UserState };
+type StoreState = {
+  user: UserState;
+};
+
+export type { CartItem, Order, Pizza, StoreState, UserState };
