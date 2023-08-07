@@ -5,6 +5,7 @@ interface ButtonProps {
   disabled?: boolean;
   to?: string;
   type?: "primary" | "secondary" | "small";
+  onClick?: () => void;
 }
 
 const base =
@@ -17,7 +18,13 @@ const styles = {
   small: `${base} py-2 text-xs md:px-5 md:py-2.5`,
 };
 
-function Button({ children, disabled, to, type = "primary" }: ButtonProps) {
+function Button({
+  children,
+  disabled,
+  to,
+  type = "primary",
+  onClick,
+}: ButtonProps) {
   if (to) {
     return (
       <Link to={to} className={styles[type]}>
@@ -27,7 +34,7 @@ function Button({ children, disabled, to, type = "primary" }: ButtonProps) {
   }
 
   return (
-    <button disabled={disabled} className={styles[type]}>
+    <button disabled={disabled} onClick={onClick} className={styles[type]}>
       {children}
     </button>
   );

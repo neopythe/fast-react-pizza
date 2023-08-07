@@ -37,6 +37,7 @@ type UserState = {
 };
 
 type StoreState = {
+  cart: CartState;
   user: UserState;
 };
 
