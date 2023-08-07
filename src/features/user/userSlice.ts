@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { UserState } from "@/types";
+import type { StoreState, UserState } from "@/types";
 
 // function getPosition() {
 //   return new Promise(function (resolve, reject) {
@@ -39,5 +39,7 @@ const userSlice = createSlice({
 });
 
 export const { updateName } = userSlice.actions;
+
+export const getUsername = (state: StoreState) => state.user.username;
 
 export default userSlice.reducer;
