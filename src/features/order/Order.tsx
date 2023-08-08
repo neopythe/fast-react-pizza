@@ -1,10 +1,15 @@
-import { useLoaderData, LoaderFunctionArgs } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  LoaderFunctionArgs,
+  useFetcher,
+  useLoaderData,
+} from "react-router-dom";
 
 import OrderItem from "@/features/order/OrderItem";
 
 import { getOrder } from "@/services/apiRestaurant";
 
-import type { Order } from "@/types";
+import type { Order, Pizza } from "@/types";
 
 // Test ID: IIDSAT
 
@@ -15,18 +20,17 @@ import {
 } from "@/utilities/helpers";
 
 function Order() {
+  const fetcher = useFetcher();
+
+  useEffect(() => {
+    if (!fetcher.data && fetcher.state === "idle") fetcher.load("/menu");
+  }, [fetcher]);
+
   const order = useLoaderData() as Order;
 
-  // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
-  const {
-    id,
-    status,
-    priority,
-    priorityPrice,
-    orderPrice,
-    estimatedDelivery,
-    cart,
-  } = order;
+  // Anyone can search for any order, so for privacy reasons we're gonna exclude names/addresses; these are only for restaurant staff
+  const { id, status, priority, priorityPrice, orderPrice, estimatedDelivery } =
+    order;
 
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
 
@@ -55,18 +59,19 @@ function Order() {
           (Estimated delivery: {formatDate(estimatedDelivery)})
         </p>
       </div>
-
-      <ul className="divide-y divide-stone-200 border-y">
+      <ul className="space-y-1 divide-y divide-stone-200 border-y">
         {order.cart.map((item) => (
           <OrderItem
             key={item.pizzaId}
             item={item}
-            ingredients={[]}
-            isLoadingIngredients={false}
+            ingredients={
+              fetcher.data?.find((pizza: Pizza) => pizza.id === item.pizzaId)
+                .ingredients
+            }
+            isLoadingIngredients={fetcher.state === "loading"}
           />
         ))}
       </ul>
-
       <div className="space-y-2 bg-stone-200 px-6 py-5">
         <p className="text-sm font-medium text-stone-600">
           Price pizza: {formatCurrency(orderPrice)}

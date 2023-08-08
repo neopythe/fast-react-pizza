@@ -23,6 +23,9 @@ function OrderItem({
         </p>
         <p className="font-bold">{formatCurrency(totalPrice)}</p>
       </div>
+      <p className="pl-2 text-sm italic text-stone-500">
+        {isLoadingIngredients ? "Loading..." : ingredients?.join(", ")}
+      </p>
     </li>
   );
 }
