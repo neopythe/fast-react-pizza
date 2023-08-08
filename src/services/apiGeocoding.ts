@@ -17,6 +17,6 @@ export async function getAddress({
   );
   if (!response.ok) throw Error("Failed getting address");
 
-  const data = await response.json();
+  const data: Address = await response.json();
   return data;
 }

@@ -1,31 +1,42 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { getAddress } from "@/services/apiGeocoding";
 
 import type { StoreState, UserState } from "@/types";
 
-// function getPosition() {
-//   return new Promise(function (resolve, reject) {
-//     navigator.geolocation.getCurrentPosition(resolve, reject);
-//   });
-// }
+function getPosition(): Promise<GeolocationPosition> {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
 
-// async function fetchAddress() {
-//   // 1) We get the user's geolocation position
-//   const positionObj = await getPosition();
-//   const position = {
-//     latitude: positionObj.coords.latitude,
-//     longitude: positionObj.coords.longitude,
-//   };
+export const fetchAddress = createAsyncThunk("user/fetchAddress", async () => {
+  try {
+    // 1) We get the user's geolocation position
+    const positionObject: GeolocationPosition = await getPosition();
+    const position = {
+      latitude: positionObject.coords.latitude,
+      longitude: positionObject.coords.longitude,
+    };
 
-//   // 2) Then we use a reverse geocoding API to get a description of the user's address, so we can display it the order form, so that the user can correct it if wrong
-//   const addressObj = await getAddress(position);
-//   const address = `${addressObj?.locality}, ${addressObj?.city} ${addressObj?.postcode}, ${addressObj?.countryName}`;
+    // 2) We use a reverse geocoding API to get a description of the user's address so we can display it the order form to be corrected if necessary
+    const addressObject = await getAddress(position);
+    const address = `${addressObject?.locality}, ${addressObject?.city} ${addressObject?.postcode}, ${addressObject?.countryName}`;
 
-//   // 3) Then we return an object with the data that we are interested in
-//   return { position, address };
-// }
+    // 3) We return an object with the data we are interested in - this is the payload of the fulfilled state
+    return { position, address };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+});
 
 const initialState: UserState = {
   username: "",
+  status: "idle",
+  position: {},
+  address: "",
+  error: "",
 };
 
 const userSlice = createSlice({
@@ -35,6 +46,24 @@ const userSlice = createSlice({
     updateName(state, action) {
       state.username = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Here is where the actual reducer finally comes into play
+      .addCase(fetchAddress.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAddress.fulfilled, (state, action) => {
+        state.position = action?.payload?.position || {};
+        state.address = action?.payload?.address || "";
+        state.status = "idle";
+      })
+      // Adding a case for a possible error
+      // This might happen if the user does not accept geolocation
+      .addCase(fetchAddress.rejected, (state, action) => {
+        state.error = action.error.message || "";
+        state.status = "error";
+      });
   },
 });
 

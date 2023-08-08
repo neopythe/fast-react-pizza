@@ -16,6 +16,9 @@ import {
   getCart,
   getTotalCartPrice,
 } from "@/features/cart/cartSlice";
+import { fetchAddress } from "@/features/user/userSlice";
+
+import { useAppDispatch } from "@/hooks";
 
 import { createOrder } from "@/services/apiRestaurant";
 
@@ -39,6 +42,9 @@ const isValidPhone = (string: string) =>
 function CreateOrder() {
   const { username } = useSelector((state: StoreState) => state.user);
 
+  // Testing purposes
+  const dispatch = useAppDispatch();
+
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
@@ -57,6 +63,9 @@ function CreateOrder() {
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
+
+      <button onClick={() => dispatch(fetchAddress())}>Get position</button>
+
       {/* <Form method="POST" action="/order/new"> */}
       <Form method="POST">
         <div className="sm: mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">

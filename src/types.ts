@@ -1,3 +1,5 @@
+import type { AppDispatch } from "@/store";
+
 type CartItem = {
   name: string;
   pizzaId: number;
@@ -33,6 +35,10 @@ type Pizza = {
 };
 
 type UserState = {
+  address: string;
+  error: string;
+  position: { latitude?: number; longitude?: number };
+  status: string;
   username: string;
 };
 
@@ -41,4 +47,12 @@ type StoreState = {
   user: UserState;
 };
 
-export type { CartItem, CartState, Order, Pizza, StoreState, UserState };
+export type {
+  AppDispatch,
+  CartItem,
+  CartState,
+  Order,
+  Pizza,
+  StoreState,
+  UserState,
+};

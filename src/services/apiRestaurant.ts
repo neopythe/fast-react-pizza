@@ -54,7 +54,7 @@ export async function updateOrder(id: number, updateObject: unknown) {
     if (!response.ok) throw Error();
 
     // We don't need the data, so we don't return anything
-  } catch (err) {
+  } catch {
     throw Error("Failed updating your order");
   }
 }
