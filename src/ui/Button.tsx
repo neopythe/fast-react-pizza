@@ -5,7 +5,7 @@ interface ButtonProps {
   disabled?: boolean;
   to?: string;
   type?: "primary" | "round" | "secondary" | "small";
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 const base =

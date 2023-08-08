@@ -1,7 +1,6 @@
 interface Address {
   locality?: string;
   city?: string;
-  postcode?: string;
   countryName?: string;
 }
 

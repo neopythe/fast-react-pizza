@@ -11,24 +11,19 @@ function getPosition(): Promise<GeolocationPosition> {
 }
 
 export const fetchAddress = createAsyncThunk("user/fetchAddress", async () => {
-  try {
-    // 1) We get the user's geolocation position
-    const positionObject: GeolocationPosition = await getPosition();
-    const position = {
-      latitude: positionObject.coords.latitude,
-      longitude: positionObject.coords.longitude,
-    };
+  // 1) We get the user's geolocation position
+  const positionObject = await getPosition();
+  const position = {
+    latitude: positionObject.coords.latitude,
+    longitude: positionObject.coords.longitude,
+  };
 
-    // 2) We use a reverse geocoding API to get a description of the user's address so we can display it the order form to be corrected if necessary
-    const addressObject = await getAddress(position);
-    const address = `${addressObject?.locality}, ${addressObject?.city} ${addressObject?.postcode}, ${addressObject?.countryName}`;
+  // 2) We use a reverse geocoding API to get a description of the user's address so we can display it the order form to be corrected if necessary
+  const addressObject = await getAddress(position);
+  const address = `${addressObject?.locality}, ${addressObject?.city}, ${addressObject?.countryName}`;
 
-    // 3) We return an object with the data we are interested in - this is the payload of the fulfilled state
-    return { position, address };
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  // 3) We return an object with the data we are interested in - this is the payload of the fulfilled state
+  return { position, address };
 });
 
 const initialState: UserState = {
@@ -60,8 +55,9 @@ const userSlice = createSlice({
       })
       // Adding a case for a possible error
       // This might happen if the user does not accept geolocation
-      .addCase(fetchAddress.rejected, (state, action) => {
-        state.error = action.error.message || "";
+      .addCase(fetchAddress.rejected, (state) => {
+        state.error =
+          "There was a problem getting your address. Make sure to fill out this field!";
         state.status = "error";
       });
   },
