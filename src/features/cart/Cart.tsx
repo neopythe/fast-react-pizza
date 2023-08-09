@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import CartItem from "@/features/cart/CartItem";
 import EmptyCart from "@/features/cart/EmptyCart";
@@ -11,8 +13,14 @@ import LinkButton from "@/ui/LinkButton";
 function Cart() {
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const username = useSelector(getUsername);
   const cart = useSelector(getCart);
+
+  useEffect(() => {
+    if (!username) navigate("/");
+  }, [navigate, username]);
 
   if (!cart.length) return <EmptyCart />;
 
