@@ -42,7 +42,8 @@ export async function createOrder(newOrder: {
   }
 }
 
-export async function updateOrder(id: number, updateObject: unknown) {
+export async function updateOrder(id: string, updateObject: Partial<Order>) {
+  console.log("updateOrder", id, updateObject);
   try {
     const response = await fetch(`${API_URL}/order/${id}`, {
       method: "PATCH",
